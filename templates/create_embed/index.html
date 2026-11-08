@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Embed Builder - Dark Theme</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='create_embed/style.css') }}">
+</head>
+<body>
+
+  <header>
+    <h1>Embed Builder</h1>
+    <p>Configure the fields below to generate your custom embed</p>
+  </header>
+
+  <div class="container">
+    <form class="form-container" onsubmit="event.preventDefault();">
+      
+      <div>
+        <div class="section-title">Destination</div>
+        <div class="field-group">
+          <label for="channel">Text Channel</label>
+          <select id="channel">
+            <option value="" disabled selected>Select a channel...</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title">Author</div>
+        <div class="field-group">
+          <label for="authorName">Author Name</label>
+          <input type="text" id="authorName" placeholder="e.g., My Bot">
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label for="authorUrl">Author URL</label>
+            <input type="url" id="authorUrl" placeholder="https://...">
+          </div>
+          <div class="field-group">
+            <label for="authorIconUrl">Author Icon URL</label>
+            <input type="url" id="authorIconUrl" placeholder="https://...">
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title">Main Content</div>
+        <div class="field-group">
+          <label for="title">Title</label>
+          <input type="text" id="title" placeholder="Embed Title">
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label for="titleUrl">Title URL</label>
+            <input type="url" id="titleUrl" placeholder="https://...">
+          </div>
+          <div class="field-group">
+            <label for="color">Border Color</label>
+            <div class="color-picker-wrapper">
+              <input type="color" id="color" value="#5865f2">
+              <input type="text" id="colorHex" value="#5865f2" style="width: 100%;">
+            </div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label for="description">Description (Supports Markdown)</label>
+          <textarea id="description" placeholder="e.g., **Bold**, *Italics*, __Underline__, ~~Strikethrough~~, `Code`"></textarea>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title">Media</div>
+        <div class="field-row">
+          <div class="field-group">
+            <label for="imageUrl">Image URL</label>
+            <input type="url" id="imageUrl" placeholder="https://...">
+          </div>
+          <div class="field-group">
+            <label for="thumbnailUrl">Thumbnail URL</label>
+            <input type="url" id="thumbnailUrl" placeholder="https://...">
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title">Footer</div>
+        <div class="field-row">
+          <div class="field-group">
+            <label for="footerText">Footer Text</label>
+            <input type="text" id="footerText" placeholder="Footer text">
+          </div>
+          <div class="field-group">
+            <label for="footerIconUrl">Footer Icon URL</label>
+            <input type="url" id="footerIconUrl" placeholder="https://...">
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit" onclick="send_embed()">Submit & Send</button>
+    </form>
+
+    <div class="preview-container">
+      <div class="section-title">Preview</div>
+      <div class="discord-embed" id="embedPreview">
+        
+        <div class="embed-author" id="pAuthor" style="display: none;">
+          <img id="pAuthorIcon" src="" alt="" style="display: none;">
+          <span id="pAuthorNameContainer"></span>
+        </div>
+
+        <div id="pTitleContainer"></div>
+
+        <div class="embed-description" id="pDescription" style="display: none;"></div>
+
+        <img id="pThumbnail" class="embed-thumbnail" src="" alt="" style="display: none;">
+        
+        <img id="pImage" class="embed-image" src="" alt="" style="display: none;">
+
+        <div class="embed-footer" id="pFooter" style="display: none;">
+          <img id="pFooterIcon" src="" alt="" style="display: none;">
+          <span id="pFooterText"></span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='create_embed/live_viewer.js') }}"></script>
+  <script src="{{ url_for('static', filename='create_embed/token.js') }}"></script>
+
+</body>
+</html>

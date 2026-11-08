@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ticket Creator Configuration</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='create_ticket/style.css') }}">
+</head>
+
+<body>
+
+  <header>
+    <h1>Ticket Creator Setup</h1>
+    <p>Configure your Discord ticket system settings below</p>
+  </header>
+
+  <div class="container">
+    <form class="form-container" onsubmit="event.preventDefault();">
+
+      <div>
+        <div class="section-title">Channel Configuration</div>
+
+        <div class="field-group checkbox-group">
+          <label class="checkbox-label" for="create_text_channel">
+            <input type="checkbox" id="create_text_channel" onchange="toggleChannelSelect(this)">
+            <span>Create new text channel automatically</span>
+          </label>
+        </div>
+
+        <div class="field-group" id="channelSelectGroup">
+          <label for="channel">Ticket Panel Channel</label>
+          <select id="channel">
+            <option value="" disabled selected>Select a channel for the ticket panel...</option>
+          </select>
+        </div>
+
+        <div class="field-group" id="feedbackChannelSelectGroup">
+          <label for="feedback_channel">Feedback Channel</label>
+          <select id="feedback_channel">
+            <option value="" disabled selected>Select a channel for feedbacks...</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title">Ticket Details</div>
+
+        <div class="field-group">
+          <label for="title">Title</label>
+          <input type="text" id="title" placeholder="e.g., Support Ticket">
+        </div>
+
+        <div class="field-group">
+          <label for="description">Ticket Description (Supports Markdown)</label>
+          <textarea id="description"
+            placeholder="Explain how to open a ticket or describe the support system..."></textarea>
+        </div>
+
+        <div class="field-group">
+          <label for="footerText">Footer Text</label>
+          <input type="text" id="footerText" placeholder="e.g., Click the button below to open a ticket">
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label for="color">Embed / Ticket Color</label>
+            <div class="color-picker-wrapper">
+              <input type="color" id="color" value="#5865f2"
+                oninput="document.getElementById('colorHex').value = this.value">
+              <input type="text" id="colorHex" value="#5865f2" style="width: 100%;"
+                oninput="document.getElementById('color').value = this.value">
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="roles_to_mark">Roles to Mention / Tag</label>
+            <select id="roles_to_mark"></select>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title">Ticket Select Menu Options</div>
+
+        <div id="options-container">
+          <div class="option-item"
+            style="margin-bottom: 20px; border: 1px solid #383a40; padding: 15px; border-radius: 8px; background: #2b2d31; position: relative;">
+            <button type="button" onclick="this.parentElement.remove()"
+              style="position: absolute; top: 10px; right: 10px; background: #ed4245; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-weight: bold;">X</button>
+
+            <div class="field-row" style="margin-bottom: 10px;">
+              <div class="field-group" style="flex: 0 0 60px;">
+                <label>Emoji</label>
+                <input type="text" class="opt-emoji" placeholder="⭐">
+              </div>
+
+              <div class="field-group" style="flex: 1;">
+                <label>Option Title</label>
+                <input type="text" class="opt-label" placeholder="Content Creator's">
+              </div>
+            </div>
+
+            <div class="field-group" style="margin-bottom: 10px;">
+              <label>Description (Dropdown Detail)</label>
+              <input type="text" class="opt-description"
+                placeholder="Deseja receber o cargo de Content Creator's? Abra este ticket">
+            </div>
+
+            <div class="field-group">
+              <label>Welcome Message for this Ticket</label>
+              <textarea class="opt-welcome-msg" rows="2"
+                placeholder="Thank you for applying for Content Creator! Please send your social media links here."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="btn-add-option" onclick="addOptionField()" style="margin-bottom: 20px;">+ Add
+          Option</button>
+      </div>
+
+      <button type="submit" class="btn-submit" onclick="send_ticket_config()">Create Ticket System</button>
+    </form>
+
+    <div class="preview-container">
+      <div class="section-title">Ticket Panel Preview</div>
+
+      <div class="discord-embed" id="embedPreview">
+        <div class="embed-title" id="pTitle">Support Ticket</div>
+        <div class="embed-description" id="pDescription">Tickets serves to you get help from the suport easily</div>
+        <div class="embed-footer" id="pFooter">
+          <span id="pFooterText">Click the button below to open a ticket</span>
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top: 20px;">Select Menu Preview</div>
+
+      <div class="discord-select-menu-preview" id="pSelectMenu"
+        style="background: #2b2d31; padding: 10px; border-radius: 5px;"></div>
+
+      <div class="section-title" style="margin-top: 20px;">Created Ticket Preview (<span id="pSelectedOptionTitle"
+          style="color: #5865f2;">Default Option</span>)</div>
+
+      <div class="discord-embed" id="ticketEmbedPreview">
+        <div class="embed-description" id="pRolesMentioned" style="color: #5865f2; font-weight: 600;"></div>
+        <div class="embed-description" id="pTicketMessage"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    function toggleChannelSelect(checkbox) {
+      const channelSelect = document.getElementById('channel');
+      const feedbackSelect = document.getElementById('feedback_channel');
+
+      const channelGroup = document.getElementById('channelSelectGroup');
+      const feedbackGroup = document.getElementById('feedbackChannelSelectGroup');
+
+      channelSelect.disabled = checkbox.checked;
+      feedbackSelect.disabled = checkbox.checked;
+
+      channelGroup.style.opacity = checkbox.checked ? '0.5' : '1';
+      feedbackGroup.style.opacity = checkbox.checked ? '0.5' : '1';
+    }
+
+
+    function addOptionField() {
+      const container = document.getElementById('options-container');
+      const newOption = document.createElement('div');
+
+      newOption.className = 'option-item';
+      newOption.style.cssText = 'margin-bottom: 20px; border: 1px solid #383a40; padding: 15px; border-radius: 8px; background: #2b2d31; position: relative;';
+
+      newOption.innerHTML = `
+        <button type="button" onclick="this.parentElement.remove()" style="position: absolute; top: 10px; right: 10px; background: #ed4245; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-weight: bold;">X</button>
+
+        <div class="field-row" style="margin-bottom: 10px;">
+          <div class="field-group" style="flex: 0 0 60px;">
+            <label>Emoji</label>
+            <input type="text" class="opt-emoji" placeholder="❓">
+          </div>
+
+          <div class="field-group" style="flex: 1;">
+            <label>Option Title</label>
+            <input type="text" class="opt-label" placeholder="Dúvidas">
+          </div>
+        </div>
+
+        <div class="field-group" style="margin-bottom: 10px;">
+          <label>Description (Dropdown Detail)</label>
+          <input type="text" class="opt-description" placeholder="Deseja tirar uma dúvida? Abra este ticket">
+        </div>
+
+        <div class="field-group">
+          <label>Welcome Message for this Ticket</label>
+          <textarea class="opt-welcome-msg" rows="2" placeholder="Obrigado por abrir uma dúvida! Como podemos te ajudar?"></textarea>
+        </div>
+      `;
+
+      container.appendChild(newOption);
+    }
+  </script>
+
+  <script src="{{ url_for('static', filename='create_ticket/live_viewer.js') }}"></script>
+  <script src="{{ url_for('static', filename='create_ticket/token.js') }}"></script>
+
+</body>
+
+</html>
