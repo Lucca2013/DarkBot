@@ -138,10 +138,6 @@ DarkBot is independently developed and maintained by **Luccadark (Lucca Felipett
 - GitHub: [@lucca2013](https://github.com/lucca2013)
 - Support the project: [Ko-fi](https://ko-fi.com/luccafelipetto)
 
-## License
-
-See the [LICENSE](LICENSE) file for information about the project's license.
-
 ---
 
 <p align="center">
