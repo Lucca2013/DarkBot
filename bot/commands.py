@@ -184,7 +184,7 @@ def setup_commands(bot):
         token = jwt.encode(payload, os.getenv("JWT_KEY"), algorithm="HS256")
               
         await interaction.response.send_message(            
-            f"Acess [here]({os.getenv("SITE_URL")}/create_embed?{token}) to create your embed",
+            f"Acess [here]({os.getenv('SITE_URL')}/create_embed?{token}) to create your embed",
             ephemeral=True
         )
         
@@ -214,7 +214,7 @@ def setup_commands(bot):
         token = jwt.encode(payload, os.getenv("JWT_KEY"), algorithm="HS256")
               
         await interaction.response.send_message(            
-            f"Acess [here]({os.getenv("SITE_URL")}/create_ticket?{token}) to create your ticket",
+            f"Acess [here]({os.getenv('SITE_URL')}/create_ticket?{token}) to create your ticket",
             ephemeral=True
         )
 
